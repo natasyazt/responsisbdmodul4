@@ -20,6 +20,12 @@ export const MemberController = {
         data: newMember
       });
     } catch (err) {
+      // Menangkap error jika email sudah ada di database (Unique Constraint)
+      if (err.message.includes('unique constraint') || err.code === '23505') {
+        return res.status(400).json({ 
+          error: "Pendaftaran gagal: Email tersebut sudah terdaftar di sistem. Silakan gunakan email lain." 
+        });
+      }
       res.status(400).json({ error: err.message });
     }
   }
